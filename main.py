@@ -10,8 +10,15 @@ nome = input("\nDigite nome usuário: ")
 senha = getpass.getpass("Digite a senha: ")
 
 def menu(con):
-    menuOp = ['\n---------------------------------', '1 - Consultar', '2 - Cadastrar', '3 - Editar', '4 - Excluir', '0 - Sair']
-    db.checkTable(con)
+    menuOp = [
+        '\n---------------------------------',
+        '1 - Consultar',
+        '2 - Cadastrar',
+        '3 - Editar',
+        '4 - Excluir',
+        '0 - Sair']
+    db.chkTable(con)
+    db.chkIdSeq(con)
     for i in menuOp:
         print(i)
     esc = input("Digite o numero da opção deseja: ")
@@ -27,7 +34,7 @@ def menu(con):
                     db.cadastrar(con, nomeT, descT)
                     menu(con)
                 else:
-                    print("****** Nome ou senha não pode ser vazio ******\n")
+                    print("****** Nome ou descrição não pode ser vazio ******\n")
                     menu(con)
             case "3":
                 idT = input("\nDigite o ID da tarefa: ")
@@ -57,16 +64,13 @@ def menu(con):
                     print("****** ID invalido ****** ")
                     menu(con)
             case "0":
-                print("\n****** SEE YOU LATER! ******\n")
+                print("\n****** ATÉ MAIS! ******\n")
                 con.close()
                 time.sleep(2)
     else:
         print("****** Opção inválida ******")
         menu(con)
-
-
-                      
-
+                   
 def conectar(nome, senha):
     if(nome != "" and senha != ""): 
         con = db.conDB(nome, senha)

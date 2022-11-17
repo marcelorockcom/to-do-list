@@ -11,7 +11,7 @@ def conDB(nome, senha):
     except Exception as e:
         return "nao conectado"
 
-def checkTable(con):
+def chkTable(con):
     try:
         cr = con.cursor()
         cr.execute("select * from list")
@@ -23,6 +23,17 @@ def checkTable(con):
                 list(id number(10), nome varchar2(50), descricao varchar2(255), concluido char(1))''')
             cr.close()
 
+def chkIdSeq(con):
+    try:
+        cr = con.cursor()
+        cr.execute("select idTarefa.currval from dual")
+        cr.close()
+    except cx_Oracle.DatabaseError as e:
+        if(e.args[0].code == 2289):
+            cr = con.cursor()
+            cr.execute('CREATE SEQUENCE idTarefa maxvalue 999')
+            cr.close()
+
 def checkId(con, idT):
     try:
         cursor = con.cursor()
@@ -30,7 +41,6 @@ def checkId(con, idT):
         len(chkId.fetchone())
     except Exception as e:
         return "Erro"
-
 
 def consultar(con):
     cursor = con.cursor()
@@ -46,7 +56,7 @@ def consultar(con):
 def cadastrar(con, nomeT, descT):
     try:
         cursor = con.cursor()
-        query = f"INSERT INTO list values(id.nextval, '{nomeT}', '{descT}', 'N')"
+        query = f"INSERT INTO list values(idTarefa.nextval, '{nomeT}', '{descT}', 'N')"
         cursor.execute(query)
         con.commit()
         cursor.close()
